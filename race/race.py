@@ -22,6 +22,7 @@ class Kart:
         total_distance = len(self.lap_times) * lap_length
         avg_speed = total_distance / (total_time / 60)
         return avg_speed
+    
 
 
 class Race:
@@ -65,3 +66,22 @@ for position, (color, total_time, avg_speed) in enumerate(results, 1):
     print(
         f"{position}. {color} kart with total time {total_time:.2f} minutes and average speed {avg_speed:.2f} km/h"
     )
+
+
+fig, ax = plt.subplots()
+for kart in race.karts:
+    kart_progress = []
+    for lap_time in kart.lap_times:
+        last_progress = 0
+        if kart_progress:
+            last_progress = kart_progress[-1]
+        kart_progress.append(last_progress + lap_time)
+    laps = list(range(1, race.laps + 1))
+    ax.plot(laps, kart_progress, label=f"{kart.color} kart")
+
+ax.set_xlabel("Lap Number")
+ax.set_ylabel("Time per Lap (minutes)")
+ax.set_title("Lap Times for Each Kart")
+ax.legend()
+
+plt.show()
