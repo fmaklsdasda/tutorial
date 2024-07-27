@@ -2,13 +2,22 @@ import os
 import json
 import shutil
 import time
+from tkinter import Canvas, ttk, Tk, Label, Frame, ALL
+import random
+
+from pages.game_menu import GameMenu
+from pages.game_settings import GameSettings
 
 MIN_NAME_LENGTH = 3
 STANDARD_PLAYER_NAME = "Petya"
 BAN_NAMES = ["admin", "root", "Hitler"]
-MIN_TERMINAL_WIDTH = 80
-class Game:
+GAME_WIDTH = 700
+GAME_HEIGHT = 700
+
+
+class Game(Tk):
     def __init__(self):
+        super().__init__()
         self.settings_file = "settings.json"
         self.player_name = ""
         self.player_color = ""
@@ -19,36 +28,23 @@ class Game:
             "yellow": (255, 255, 0),
         }
         self.load_settings()
+        self.container = Frame(self)
+        self.active_page = GameMenu(game=self)
+        self.active_page.tkraise()
 
-    def run(self):
-        while True:
-            self.clear_console()
-            self.show_menu()
-
-    def exit(self):
-        print("\nКорректный выход из игры...")
-        exit()
-
-    def clear_console(self):
-        os.system("cls" if os.name == "nt" else "clear")
-
-    def show_menu(self):
-        print("1. Начать игру")
-        print("2. Настройки")
-        print("3. Выход")
-        choice = input("Выберите пункт меню: ")
-
-        if choice == "1":
-            self.start_game()
-        elif choice == "2":
-            self.settings()
-        elif choice == "3":
-            self.exit()
-        else:
-            print("Некорректный выбор, попробуйте еще раз.")
+    def clear_window(self):
+        if self.active_page:
+            self.active_page.unmount()
 
     def start_game(self):
-        self.animate_marker(0.4)
+        print("игра начата")
+    
+    def open_settings(self):
+        self.clear_window()
+        self.active_page = GameSettings(game=self)
+        
+    def quit_app(self):
+        print("вы вышли из приложения")
 
     def settings(self):
         def insert_name(counter=0):
@@ -123,35 +119,18 @@ class Game:
                 self.player_name = settings.get("player_name", "")
                 self.player_color = settings.get("player_color", "")
 
-    def get_terminal_width(self):
-        return shutil.get_terminal_size().columns
-    
-    def terminal_width_check(self):
-        terminal_size = shutil.get_terminal_size((80,20))
-        current_terminal_width = terminal_size.columns
-        if current_terminal_width < MIN_TERMINAL_WIDTH:
-            print("Ширина терминала не подходит")
-        else:
-            print("Ширина терминала подходит")
+def open_settings():
+    settings_window = tk.Toplevel(root)
+    settings_window.title("Настройки")
+    settings_window.geometry("700x700")
+    label = ttk.Label(settings_window, text="Здесь будут настройки")
+    label.pack(pady=20)
+    button_name = ttk.Button(settings_window, text="Имя игрока", command=settings_window.destroy)
+    button_name.pack(pady=10)
+    button_color = ttk.Button(settings_window, text="Выбор цвета игрока", command=settings_window.destroy)
+    button_color.pack(pady=20)
+    button_close = ttk.Button(settings_window, text="Закрыть", command=settings_window.destroy)
+    button_close.pack(pady=30)
 
-    def animate_marker(self, speed):
-        marker = "-"
-        while True:
-            terminal_width = self.get_terminal_width()
-            length = terminal_width // 2
-            for position in range(length):
-                self.clear_console()
-                print(" " * position + marker)
-                time.sleep(speed)
-            for position in range(length - 2, 0, -1):
-                self.clear_console()
-                print(" " * position + marker)
-                time.sleep(speed)
-
-
-if __name__ == "__main__":
-    game = Game()
-    try:
-        game.run()
-    except KeyboardInterrupt:
-        game.exit()
+game = Game()
+game.mainloop() 
