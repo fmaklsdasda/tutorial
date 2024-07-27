@@ -1,16 +1,15 @@
-from tkinter import Canvas, ttk, Tk, Label, Frame, ALL
+from tkinter import ttk, Label, Frame
 
 
 class GameMenu(Frame):
     def __init__(self, game) -> None:
-        Frame.__init__(self, game.container)
+        super().__init__(game.container)
         self.game = game
         self.mount()
-        self.grid(row=0, column=0, sticky="nsew")
 
     def mount(self):
         game = self.game
-        label = Label(self, text ="asdaf")
+        label = Label(self, text="asdaf")
         label.pack()
         button_start = ttk.Button(self, text="Начать игру", command=game.start_game)
         button_settings = ttk.Button(self, text="Настройки", command=game.open_settings)

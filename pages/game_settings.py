@@ -3,14 +3,12 @@ from tkinter import Tk, Label, Entry, Button, StringVar, OptionMenu, messagebox,
 STANDARD_PLAYER_NAME = "Игрок"
 MIN_NAME_LENGTH = 3
 BAN_NAMES = {"admin", "player", "Hitler"}
-COLORS = {
-    "red": "#FF0000",
-    "green": "#00FF00",
-    "blue": "#0000FF"
-}
+COLORS = {"red": "#FF0000", "green": "#00FF00", "blue": "#0000FF"}
 
-class GameSettings:
+
+class GameSettings(Frame):
     def __init__(self, game) -> None:
+        super().__init__(game.container)
         self.game = game
         self.player_name = StringVar()
         self.player_color = StringVar()
@@ -29,17 +27,18 @@ class GameSettings:
         return True, ""
 
     def mount(self):
-        game = self.game
-        window = game.window
-        window.title("Настройки")
 
-        Label(window, text="Введите имя игрока:").pack()
-        Entry(window, textvariable=self.player_name).pack()
+        label = Label(self, text="Настройки")
+        label.pack()
 
-        Label(window, text="Выберите цвет игрока:").pack()
-        OptionMenu(window, self.player_color, *COLORS.keys()).pack()
+        Label(self, text="Введите имя игрока:").pack()
+        Entry(self, textvariable=self.player_name).pack()
 
-        Button(window, text="Сохранить настройки", command=self.save_settings).pack()
+        Label(self, text="Выберите цвет игрока:").pack()
+        OptionMenu(self, self.player_color, *COLORS.keys()).pack()
+
+        Button(self, text="Сохранить настройки", command=self.save_settings).pack()
+        Button(self, text="В меню", command=self.game.open_menu).pack()
 
     def save_settings(self):
         player_name = self.player_name.get()
@@ -59,21 +58,3 @@ class GameSettings:
         self.game.save_settings()
 
         messagebox.showinfo("Успех", "Настройки сохранены.")
-        self.game.window.destroy()
-
-class Game(Tk):
-    def __init__(self) -> None:
-        self.frame = Frame(self)
-        self.player_name = STANDARD_PLAYER_NAME
-        self.player_color = ""
-
-    def save_settings(self):
-        print(f"Имя: {self.player_name}, Цвет: {self.player_color}, RGB: {COLORS[self.player_color]}")
-
-    def start_settings(self):
-        GameSettings(self)
-        self.frame.mainloop()
-
-if __name__ == "__main__":
-    game = Game()
-    game.start_settings()
