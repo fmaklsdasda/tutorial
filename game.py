@@ -2,6 +2,7 @@ import os
 import json
 from tkinter import Tk, Frame
 
+from config import GAME_HEIGHT, GAME_WIDTH
 from pages.game_menu import GameMenu
 from pages.game_settings import (
     BAN_NAMES,
@@ -12,21 +13,19 @@ from pages.game_settings import (
 
 
 class Game(Tk):
-    def __init__(self):
+    def __init__(self, width, height):
         super().__init__()
         self.settings_file = "settings.json"
         self.player_name = ""
         self.player_color = ""
         self.load_settings()
 
+        self.geometry(f"{width}x{height}")  
         self.container = Frame(self)
 
-        # TODO: investigate this lines, what a hell does it means!
         self.container.pack(side="top", fill="both", expand=True)
         self.container.grid_rowconfigure(0, weight=1)
         self.container.grid_columnconfigure(0, weight=1)
-
-        # TODO: setup main layout - page size Width x Height
 
         self.pages = {}
 
@@ -54,11 +53,8 @@ class Game(Tk):
     def open_settings(self):
         self.open_page(GameSettings)
 
-    # TODO: add new about page with version
-
-    # Handle game exit
     def quit_app(self):
-        print("вы вышли из приложения")
+        exit()
 
     def save_settings(self):
         settings = {
@@ -76,5 +72,6 @@ class Game(Tk):
                 self.player_color = settings.get("player_color", "")
 
 
-game = Game()
+
+game = Game(GAME_WIDTH, GAME_HEIGHT)
 game.mainloop()

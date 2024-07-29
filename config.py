@@ -3,6 +3,7 @@ STANDARD_PLAYER_NAME = "Petya"
 BAN_NAMES = ["admin", "root", "Hitler"]
 GAME_WIDTH = 700
 GAME_HEIGHT = 700
+VERSION = "0.0.0"
 COLORS = {
     "red": (255, 0, 0),
     "green": (0, 255, 0),

@@ -1,5 +1,8 @@
 from tkinter import Tk, Label, Entry, Button, StringVar, OptionMenu, messagebox, Frame
 
+from config import VERSION
+
+
 STANDARD_PLAYER_NAME = "Игрок"
 MIN_NAME_LENGTH = 3
 BAN_NAMES = {"admin", "player", "Hitler"}
@@ -38,7 +41,11 @@ class GameSettings(Frame):
         OptionMenu(self, self.player_color, *COLORS.keys()).pack()
 
         Button(self, text="Сохранить настройки", command=self.save_settings).pack()
+        Button(self, text="О программе",command=self.about).pack()
         Button(self, text="В меню", command=self.game.open_menu).pack()
+
+    def about(self):
+        messagebox.showinfo("Версия программы", f"Версия программы: {VERSION}")
 
     def save_settings(self):
         player_name = self.player_name.get()
