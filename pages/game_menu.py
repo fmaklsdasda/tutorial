@@ -11,7 +11,7 @@ class GameMenu(Frame):
         game = self.game
         label = Label(self, text="asdaf")
         label.pack()
-        button_start = ttk.Button(self, text="Начать игру", command=game.start_game)
+        button_start = ttk.Button(self, text="Начать игру", command=game.open_game)
         button_settings = ttk.Button(self, text="Настройки", command=game.open_settings)
         button_exit = ttk.Button(self, text="Выход", command=game.quit_app)
         button_start.pack(pady=10)

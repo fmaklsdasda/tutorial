@@ -3,6 +3,7 @@ import json
 from tkinter import Tk, Frame
 
 from config import GAME_HEIGHT, GAME_WIDTH
+from pages.game_page import MovingGame
 from pages.game_menu import GameMenu
 from pages.game_settings import (
     BAN_NAMES,
@@ -19,8 +20,9 @@ class Game(Tk):
         self.player_name = ""
         self.player_color = ""
         self.load_settings()
-
-        self.geometry(f"{width}x{height}")  
+        self.active_page = None
+        
+        self.geometry(f"{width}x{height}")
         self.container = Frame(self)
 
         self.container.pack(side="top", fill="both", expand=True)
@@ -34,18 +36,25 @@ class Game(Tk):
     def open_page(self, Page):
         name = Page.__name__
         page = None
-        if name in self.pages:
-            page = self.pages[name]
-        else:
-            page = Page(game=self)
-            self.pages[name] = page
+        # if name in self.pages:
+        #     page = self.pages[name]
+            
+        # else:
+        #     page = Page(game=self)
+        #     self.pages[name] = page
+        page = Page(game=self)
+        
+        if self.active_page:
+            if hasattr(self.active_page, "unmount"):
+               self.active_page.unmount()
+        
 
         self.active_page = page
         self.active_page.grid(row=0, column=0, sticky="nsew")
         self.active_page.tkraise()
 
-    def start_game(self):
-        print("игра начата")
+    def open_game(self):
+        self.open_page(MovingGame)
 
     def open_menu(self):
         self.open_page(GameMenu)
@@ -70,7 +79,6 @@ class Game(Tk):
                 settings = json.load(f)
                 self.player_name = settings.get("player_name", "")
                 self.player_color = settings.get("player_color", "")
-
 
 
 game = Game(GAME_WIDTH, GAME_HEIGHT)
