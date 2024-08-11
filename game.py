@@ -21,7 +21,8 @@ class Game(Tk):
         self.player_color = ""
         self.load_settings()
         self.active_page = None
-        
+        self.unbind_class("Button", "<Key-space>")
+
         self.geometry(f"{width}x{height}")
         self.container = Frame(self)
 
